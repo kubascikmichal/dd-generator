@@ -5,6 +5,7 @@
 #include <esp_http_server.h>
 #include <cJSON.h>
 #include <stdio.h>
+#include "esp_mac.h"
 #include "../Shared_data/SharedData.h"
 
 #define _STREAM_BOUNDARY "\r\n--123456789000000000000987654321\r\n"
@@ -29,6 +30,24 @@ public:
 
     static esp_err_t get_script_js(httpd_req_t *req);
     static const httpd_uri_t getScriptJS;
+
+    static esp_err_t get_actual_dB(httpd_req_t *req);
+    static const httpd_uri_t getActualDB;
+
+    static esp_err_t get_MAC(httpd_req_t *req);
+    static const httpd_uri_t getMAC;
+
+    static esp_err_t get_settings(httpd_req_t *req);
+    static const httpd_uri_t getSettings;
+
+    static esp_err_t set_settings(httpd_req_t *req);
+    static const httpd_uri_t setSettings;
+
+    static esp_err_t get_total(httpd_req_t *req);
+    static const httpd_uri_t getTotal;
+
+    static esp_err_t get_last(httpd_req_t *req);
+    static const httpd_uri_t getLast;
 
     bool init();
 

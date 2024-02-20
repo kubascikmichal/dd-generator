@@ -1,7 +1,65 @@
-body{
-    background-color: rgb(47, 0, 255);
+.card {
+    max-width: 90%;
+    box-shadow: 0px 2px 18px -4px rgba(0, 0, 0, 0.75);
+    border-radius: 25px;
+    min-height: 25px;
+    background: #a6e99b;
+    padding: 30px;
+    box-sizing: border-box;
+    color: rgb(0, 0, 0);
+    margin-top: 25px;
+    margin-left: 5%;
+    text-align: center;
 }
-p {
-    color: brown;
+
+.body {
+    background: #dbdbdb;
+}
+
+.settings_category {
+    max-width: 90%;
+    box-shadow: 0px 2px 18px -4px rgba(0, 0, 0, 0.75);
+    border-radius: 25px;
+    min-height: 25px;
+    background: #dbdbdb;
+    padding: 30px;
+    box-sizing: border-box;
+    color: rgb(0, 0, 0);
+    margin-top: 25px;
+    margin-left: 5%;
+    text-align: center;
+}
+
+.settings_text_category {
+    text-align: left;
+}
+
+.sources_card {
+    min-height: 25px;
+    text-align: center;
+}
+
+.button {
+    border: rgb(0, 0, 0);
+    border-radius: 15px;
+    background-color: rgb(132, 255, 153);
+    color: black;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: rgb(74, 179, 67);
+    color: rgb(0, 0, 0);
+}
+
+.footer {
+    margin-top: 25px;
     text-align: center;
 }

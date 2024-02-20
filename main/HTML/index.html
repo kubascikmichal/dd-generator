@@ -1,18 +1,29 @@
 <!DOCTYPE html>
+
 <head>
     <title>
-    Decibel meter
+        Decibel meter
     </title>
-    <link href="/style.css" rel="stylesheet" ></link>
+    <link href="/style.css" rel="stylesheet">
+    </link>
     <script src="script.js"></script>
 </head>
+
 <body>
     <div class="body">
-    <h3>Actual dB:<span id="actual"></span></h3>
-    <h1>Settings</h1>
-    <p>Treshold: <span id="act_treshold"></span><input type="number" id="new_treshold"></p>
-    <p>My MAC address <span id="myMAC"></span></p>
-    <p>Generator MAC address <input type="text" id="generator"></p>
-    <p><span id="info"></span></p>
-</div>
+        <div class="card">
+            <h3>Actual dB: <span id="actual"></span></h3>
+            <div>
+                <h1>Settings</h1>
+                <p>Treshold: <span id="act_treshold"></span><input type="number" id="new_treshold"></p>
+                <p>Generator MAC address <input type="text" id="generator"></p>
+            </div>
+            <div>
+                <h2>Info & stats</h2>
+                <p>My MAC address <span id="MAC"></span></p>
+                <p>Totaly over: <span id="totaly"></span></p>
+                <p>Last 24h (after restart): <span id="last"></span></p>
+            </div>
+        </div>
+    </div>
 </body>

@@ -71,10 +71,129 @@ const httpd_uri_t HTTP_Server::getScriptJS = {
     .user_ctx = NULL,
 };
 
+esp_err_t HTTP_Server::get_actual_dB(httpd_req_t *req)
+{
+    cJSON *sending_data = cJSON_CreateObject();
+    cJSON_AddNumberToObject(sending_data, "actualDB", shared_data->get_dB());
+    char *data = cJSON_PrintUnformatted(sending_data);
+    httpd_resp_send(req, data, strlen(data));
+    return ESP_OK;
+}
+const httpd_uri_t HTTP_Server::getActualDB = {
+
+    .uri = "/getActualDB",
+    .method = HTTP_GET,
+    .handler = HTTP_Server::get_actual_dB,
+    .user_ctx = NULL,
+};
+
+esp_err_t HTTP_Server::get_MAC(httpd_req_t *req)
+{
+    printf("get MAC\n\r");
+    cJSON *getMAC = cJSON_CreateObject();
+    uint8_t MAC[6];
+    esp_efuse_mac_get_default(MAC);
+    char mac[20] = {0};
+    sprintf(mac, MACSTR, MAC2STR(MAC));
+    if (getMAC != NULL)
+    {
+        cJSON_AddStringToObject(getMAC, "MAC", mac);
+        httpd_resp_send(req, cJSON_PrintUnformatted(getMAC), strlen(cJSON_PrintUnformatted(getMAC)));
+    }
+    else
+    {
+        httpd_resp_send(req, "{}", strlen("{}"));
+    }
+    return ESP_OK;
+}
+
+const httpd_uri_t HTTP_Server::getMAC = {
+    .uri = "/getMAC",
+    .method = HTTP_GET,
+    .handler = HTTP_Server::get_MAC,
+    .user_ctx = NULL};
+
+esp_err_t HTTP_Server::get_settings(httpd_req_t *req)
+{
+    printf("get settings\n\r");
+    /*pthread_mutex_lock(sharedMut);
+    cJSON *settings = sharedNVS->getConfig();
+    pthread_mutex_unlock(sharedMut);
+    if (settings != NULL)
+    {
+        httpd_resp_send(req, cJSON_PrintUnformatted(settings), strlen(cJSON_PrintUnformatted(settings)));
+    }
+    else
+    {
+        httpd_resp_send(req, "{}", strlen("{}"));
+    }*/
+    httpd_resp_send(req, "{}", strlen("{}"));
+    return ESP_OK;
+}
+
+const httpd_uri_t HTTP_Server::getSettings = {
+    .uri = "/getSettings",
+    .method = HTTP_GET,
+    .handler = HTTP_Server::get_settings,
+    .user_ctx = NULL};
+
+esp_err_t HTTP_Server::set_settings(httpd_req_t *req)
+{
+    char *content = (char *)malloc(req->content_len * sizeof(char));
+    memset(content, 0, req->content_len);
+
+    int ret = httpd_req_recv(req, content, req->content_len);
+    printf("Content: %s\n\r", content);
+    cJSON *setSettings = cJSON_CreateObject();
+    if (ret <= 0)
+    {
+        cJSON_AddStringToObject(setSettings, "status", "400");
+    }
+    else
+    {
+        cJSON *settings = cJSON_Parse(content);
+        // sharedNVS->saveConfig(settings);
+        cJSON_AddStringToObject(setSettings, "status", "200");
+    }
+    httpd_resp_send(req, cJSON_PrintUnformatted(setSettings), strlen(cJSON_PrintUnformatted(setSettings)));
+    free(content);
+    return ESP_OK;
+}
+
+const httpd_uri_t HTTP_Server::setSettings = {
+    .uri = "/setSettings",
+    .method = HTTP_POST,
+    .handler = HTTP_Server::set_settings,
+    .user_ctx = NULL};
+
+esp_err_t HTTP_Server::get_total(httpd_req_t *req)
+{
+    httpd_resp_send(req, "{\"total\":0}", strlen("{\"total\":0}"));
+    return ESP_OK;
+}
+const httpd_uri_t HTTP_Server::getTotal = {
+    .uri = "/getTotal",
+    .method = HTTP_GET,
+    .handler = HTTP_Server::get_total,
+    .user_ctx = NULL};
+
+esp_err_t HTTP_Server::get_last(httpd_req_t *req)
+{
+    httpd_resp_send(req, "{\"last\":0}", strlen("{\"last\":0}"));
+    return ESP_OK;
+}
+
+const httpd_uri_t HTTP_Server::getLast = {
+    .uri = "/getLast",
+    .method = HTTP_GET,
+    .handler = HTTP_Server::get_last,
+    .user_ctx = NULL};
+
 bool HTTP_Server::init()
 {
     /* Generate default configuration */
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+    config.max_uri_handlers = 11;
 
     /* Empty handle to esp_http_server */
     httpd_handle_t server = NULL;
@@ -85,10 +204,14 @@ bool HTTP_Server::init()
         /* Register URI handlers */
         httpd_register_uri_handler(server, &mainPageHandler);
         httpd_register_uri_handler(server, &getFaviconIco);
-        httpd_register_uri_handler(server, &getInternalSettings);
-        httpd_register_uri_handler(server, &getActualFrame);
         httpd_register_uri_handler(server, &getScriptJS);
         httpd_register_uri_handler(server, &getStyleCSS);
+        httpd_register_uri_handler(server, &getActualDB);
+        httpd_register_uri_handler(server, &getMAC);
+        httpd_register_uri_handler(server, &getSettings);
+        httpd_register_uri_handler(server, &setSettings);
+        httpd_register_uri_handler(server, &getLast);
+        httpd_register_uri_handler(server, &getTotal);
         return true;
     }
     return false;
