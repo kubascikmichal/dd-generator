@@ -1,11 +1,9 @@
 #include "HTTP_Server.h"
 
-HTTP_Server::HTTP_Server(SharedData *p_data)
+HTTP_Server::HTTP_Server()
 {
-    this->shared_data = p_data;
-}
 
-SharedData *HTTP_Server::shared_data;
+}
 
 HTTP_Server::~HTTP_Server()
 {
@@ -68,22 +66,6 @@ const httpd_uri_t HTTP_Server::getScriptJS = {
     .uri = "/script.js",
     .method = HTTP_GET,
     .handler = HTTP_Server::get_script_js,
-    .user_ctx = NULL,
-};
-
-esp_err_t HTTP_Server::get_actual_dB(httpd_req_t *req)
-{
-    cJSON *sending_data = cJSON_CreateObject();
-    cJSON_AddNumberToObject(sending_data, "actualDB", shared_data->get_dB());
-    char *data = cJSON_PrintUnformatted(sending_data);
-    httpd_resp_send(req, data, strlen(data));
-    return ESP_OK;
-}
-const httpd_uri_t HTTP_Server::getActualDB = {
-
-    .uri = "/getActualDB",
-    .method = HTTP_GET,
-    .handler = HTTP_Server::get_actual_dB,
     .user_ctx = NULL,
 };
 
@@ -166,28 +148,6 @@ const httpd_uri_t HTTP_Server::setSettings = {
     .handler = HTTP_Server::set_settings,
     .user_ctx = NULL};
 
-esp_err_t HTTP_Server::get_total(httpd_req_t *req)
-{
-    httpd_resp_send(req, "{\"total\":0}", strlen("{\"total\":0}"));
-    return ESP_OK;
-}
-const httpd_uri_t HTTP_Server::getTotal = {
-    .uri = "/getTotal",
-    .method = HTTP_GET,
-    .handler = HTTP_Server::get_total,
-    .user_ctx = NULL};
-
-esp_err_t HTTP_Server::get_last(httpd_req_t *req)
-{
-    httpd_resp_send(req, "{\"last\":0}", strlen("{\"last\":0}"));
-    return ESP_OK;
-}
-
-const httpd_uri_t HTTP_Server::getLast = {
-    .uri = "/getLast",
-    .method = HTTP_GET,
-    .handler = HTTP_Server::get_last,
-    .user_ctx = NULL};
 
 bool HTTP_Server::init()
 {
@@ -206,12 +166,9 @@ bool HTTP_Server::init()
         httpd_register_uri_handler(server, &getFaviconIco);
         httpd_register_uri_handler(server, &getScriptJS);
         httpd_register_uri_handler(server, &getStyleCSS);
-        httpd_register_uri_handler(server, &getActualDB);
         httpd_register_uri_handler(server, &getMAC);
         httpd_register_uri_handler(server, &getSettings);
         httpd_register_uri_handler(server, &setSettings);
-        httpd_register_uri_handler(server, &getLast);
-        httpd_register_uri_handler(server, &getTotal);
         return true;
     }
     return false;
