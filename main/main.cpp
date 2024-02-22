@@ -9,6 +9,7 @@
 #include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
 #include "AP/AP.h"
+#include "NVS/NVS.h"
 #include "HTTP_Server/HTTP_Server.h"
 
 extern "C"
@@ -18,11 +19,12 @@ extern "C"
 
 void app_main(void)
 {
-    AP *ap = new AP("Detector", "123456789");
-    HTTP_Server *server = new HTTP_Server();
+    NVS *nvs = new NVS();
+    AP *ap = new AP("Generator", "123456789");
+    HTTP_Server *server = new HTTP_Server(nvs);
     server->init();
     while (true)
     {
-        
+        vTaskDelay(1000);
     }
 }

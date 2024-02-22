@@ -38,12 +38,13 @@ cJSON *NVS::getConfig()
         }
         char *json = (char *)malloc(size * sizeof(char));
         err = nvs_get_str(this->storage_handle, NVS_CONFIG_LABEL, json, &size);
-        cJSON *ret = cJSON_Parse(json);
+        ret = cJSON_Parse(json);
         printf("json parsed\n\r");
         if (sizeof(json))
         {
             free(json);
         }
+        xSemaphoreGive((this->xSemaphore));
     }
     return ret;
 }
@@ -54,6 +55,7 @@ uint64_t NVS::getTotalyOver()
     if (xSemaphoreTake(this->xSemaphore, 300))
     {
         esp_err_t err = nvs_get_u64(this->storage_handle, NVS_TOTAL_TRESHOLDS_LABEL, &total);
+        xSemaphoreGive((this->xSemaphore));
     }
     return total;
 }
@@ -63,6 +65,7 @@ bool NVS::saveTotalyOver(uint64_t p_total)
     if (xSemaphoreTake(this->xSemaphore, 300))
     {
         esp_err_t err = nvs_set_u64(this->storage_handle, NVS_TOTAL_TRESHOLDS_LABEL, p_total);
+        xSemaphoreGive((this->xSemaphore));
     }
     return true;
 }

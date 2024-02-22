@@ -5,6 +5,7 @@
 #include <esp_http_server.h>
 #include <cJSON.h>
 #include <stdio.h>
+#include "../NVS/NVS.h"
 #include "esp_mac.h"
 
 #define _STREAM_BOUNDARY "\r\n--123456789000000000000987654321\r\n"
@@ -14,8 +15,10 @@ class HTTP_Server
 {
 private:
 public:
-    HTTP_Server();
+    HTTP_Server(NVS* nvs);
     ~HTTP_Server();
+
+    static NVS *nvs;
 
     static esp_err_t root_get_handler(httpd_req_t *req);
     static const httpd_uri_t mainPageHandler;

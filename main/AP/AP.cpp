@@ -5,7 +5,7 @@ AP::AP(char *SSID, char *PASSWORD, bool long_range, int p_channel,
        int p_beacon_interval)
 {
     this->m_long_range = long_range;
-    this->nvs_init();
+    //this->nvs_init();
     this->basic_AP_init();
     esp_netif_init();
     ESP_ERROR_CHECK(esp_event_loop_create_default());

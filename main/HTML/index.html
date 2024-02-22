@@ -2,7 +2,7 @@
 
 <head>
     <title>
-        Decibel meter
+        Signal generator
     </title>
     <link href="/style.css" rel="stylesheet">
     </link>
@@ -10,18 +10,20 @@
 </head>
 
 <body>
-    <div class="body">
+    <div>
         <div class="card">
-            <h3>Actual dB: <span id="actual"></span></h3>
             <div>
                 <h1>Settings</h1>
-                <p>Delay [ms]: <input type="number" id="new_treshold"></p>
-                <p>Minimum frequency [Hz]: <input type="number" id="new_minimum"></p>
-                <p>Minimum maximum [Hz]: <input type="number" id="new_maximum"></p>
-                <p>Step size [Hz]: <input type="number" id="new_step"></p>
-                <p>Step timeout size [ms]: <input type="number" id="new_step_timeout"></p>
-                <p>Interval [s]: <input type="number" id="new_interval"></p>
-                <p>Detector MAC address <input type="text" id="generator"></p>
+                <form>
+                    <p>Delay [ms]: <input type="number" id="delay"></p>
+                    <p>Minimum frequency [Hz]: <input type="number" id="minimum"></p>
+                    <p>Minimum maximum [Hz]: <input type="number" id="maximum"></p>
+                    <p>Step size [Hz]: <input type="number" id="step"></p>
+                    <p>Step timeout size [ms]: <input type="number" id="step_timeout"></p>
+                    <p>Interval [s]: <input type="number" id="interval"></p>
+                    <p>Detector MAC address <input type="text" id="detector"></p>
+                </form>
+                <button class="button" onclick="setSettings()">Zmenit nastavenia</button>
             </div>
             <div>
                 <h2>Info & stats</h2>

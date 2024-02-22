@@ -1,8 +1,10 @@
 #include "HTTP_Server.h"
 
-HTTP_Server::HTTP_Server()
-{
+NVS *HTTP_Server::nvs;
 
+HTTP_Server::HTTP_Server(NVS* nvs)
+{
+    this->nvs = nvs;
 }
 
 HTTP_Server::~HTTP_Server()
@@ -98,9 +100,8 @@ const httpd_uri_t HTTP_Server::getMAC = {
 esp_err_t HTTP_Server::get_settings(httpd_req_t *req)
 {
     printf("get settings\n\r");
-    /*pthread_mutex_lock(sharedMut);
-    cJSON *settings = sharedNVS->getConfig();
-    pthread_mutex_unlock(sharedMut);
+    
+    cJSON *settings = nvs->getConfig();
     if (settings != NULL)
     {
         httpd_resp_send(req, cJSON_PrintUnformatted(settings), strlen(cJSON_PrintUnformatted(settings)));
@@ -108,8 +109,7 @@ esp_err_t HTTP_Server::get_settings(httpd_req_t *req)
     else
     {
         httpd_resp_send(req, "{}", strlen("{}"));
-    }*/
-    httpd_resp_send(req, "{}", strlen("{}"));
+    }
     return ESP_OK;
 }
 
@@ -134,7 +134,7 @@ esp_err_t HTTP_Server::set_settings(httpd_req_t *req)
     else
     {
         cJSON *settings = cJSON_Parse(content);
-        // sharedNVS->saveConfig(settings);
+        nvs->saveConfig(settings);
         cJSON_AddStringToObject(setSettings, "status", "200");
     }
     httpd_resp_send(req, cJSON_PrintUnformatted(setSettings), strlen(cJSON_PrintUnformatted(setSettings)));
@@ -147,7 +147,6 @@ const httpd_uri_t HTTP_Server::setSettings = {
     .method = HTTP_POST,
     .handler = HTTP_Server::set_settings,
     .user_ctx = NULL};
-
 
 bool HTTP_Server::init()
 {
