@@ -12,5 +12,5 @@
     ],
     "idf.pythonBinPathWin": "C:\\Users\\micha\\.espressif\\python_env\\idf5.1_py3.11_env\\Scripts\\python.exe",
     "idf.toolsPathWin": "C:\\Users\\micha\\.espressif",
-    "idf.portWin": "COM3"
+    "idf.portWin": "COM12"
 }

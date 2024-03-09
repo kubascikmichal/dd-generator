@@ -22,7 +22,7 @@ function setSettings(){
             step_size: document.getElementById("step").value,
             step_timeout: document.getElementById("step_timeout").value,
             interval: document.getElementById("interval").value,
-            MAC: document.getElementById("generator").value,
+            MAC: document.getElementById("detector").value,
             }));
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4) {

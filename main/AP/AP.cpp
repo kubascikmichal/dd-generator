@@ -5,13 +5,13 @@ AP::AP(char *SSID, char *PASSWORD, bool long_range, int p_channel,
        int p_beacon_interval)
 {
     this->m_long_range = long_range;
-    //this->nvs_init();
+    // this->nvs_init();
     this->basic_AP_init();
     esp_netif_init();
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     esp_netif_create_default_wifi_ap();
 
-    wifi_config_t ap_config = {
+   this->ap = {
         .ap = {
             .channel = (uint8_t)p_channel,
             .authmode = WIFI_AUTH_WPA2_PSK,
@@ -19,14 +19,14 @@ AP::AP(char *SSID, char *PASSWORD, bool long_range, int p_channel,
             .max_connection = 10,
             .beacon_interval = 100}};
 
-    sprintf(reinterpret_cast<char *>(ap_config.ap.ssid), SSID);
-    sprintf(reinterpret_cast<char *>(ap_config.ap.password), PASSWORD);
+    sprintf(reinterpret_cast<char *>(this->ap.ap.ssid), SSID);
+    sprintf(reinterpret_cast<char *>(this->ap.ap.password), PASSWORD);
     ESP_ERROR_CHECK(esp_wifi_set_protocol(WIFI_IF_AP, WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11N));
     if (this->m_long_range)
     {
         ESP_ERROR_CHECK(esp_wifi_set_protocol(WIFI_IF_AP, WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11N | WIFI_PROTOCOL_LR));
     }
-    esp_wifi_set_config(WIFI_IF_AP, &ap_config);
+    esp_wifi_set_config(WIFI_IF_AP, &this->ap);
     ESP_ERROR_CHECK(esp_wifi_start());
 }
 
@@ -62,4 +62,23 @@ void AP::basic_AP_init()
     esp_wifi_set_storage(WIFI_STORAGE_RAM);
 
     esp_wifi_set_mode(WIFI_MODE_AP);
+}
+
+bool AP::start()
+{
+    ESP_ERROR_CHECK(esp_wifi_restore());
+    ESP_ERROR_CHECK(esp_wifi_set_protocol(WIFI_IF_AP, WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11N));
+    if (this->m_long_range)
+    {
+        ESP_ERROR_CHECK(esp_wifi_set_protocol(WIFI_IF_AP, WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11N | WIFI_PROTOCOL_LR));
+    }
+    esp_wifi_set_config(WIFI_IF_AP, &this->ap);
+    ESP_ERROR_CHECK(esp_wifi_start());
+    return true;
+}
+
+bool AP::stop()
+{
+    ESP_ERROR_CHECK(esp_wifi_stop());
+    return true;
 }
