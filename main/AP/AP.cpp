@@ -11,7 +11,7 @@ AP::AP(char *SSID, char *PASSWORD, bool long_range, int p_channel,
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     esp_netif_create_default_wifi_ap();
 
-   this->ap = {
+    this->ap = {
         .ap = {
             .channel = (uint8_t)p_channel,
             .authmode = WIFI_AUTH_WPA2_PSK,
@@ -21,6 +21,7 @@ AP::AP(char *SSID, char *PASSWORD, bool long_range, int p_channel,
 
     sprintf(reinterpret_cast<char *>(this->ap.ap.ssid), SSID);
     sprintf(reinterpret_cast<char *>(this->ap.ap.password), PASSWORD);
+
     ESP_ERROR_CHECK(esp_wifi_set_protocol(WIFI_IF_AP, WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11N));
     if (this->m_long_range)
     {
